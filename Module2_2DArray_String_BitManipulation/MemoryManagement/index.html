@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <img id="myImage" src="https://plus.unsplash.com/premium_photo-1757100707908-80af72fdcf10?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Toggling Image">
+    <script>
+        const imgElement = document.getElementById('myImage');
+        
+        const image1 = "https://plus.unsplash.com/premium_photo-1757100707908-80af72fdcf10?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
+        const image2 = "https://images.unsplash.com/photo-1780054694213-869dbdee8c9c?q=80&w=1015&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
+
+        let isTrue = true;
+        setInterval(() => {
+            imgElement.src = isTrue ? image2 : image1;
+            // if (imgElement.src === image1) {
+            //     imgElement.src = image2;
+            // } else {
+            //     imgElement.src = image1;
+            // }
+            isTrue = !isTrue
+        }, 1000);
+    </script>
+</body>
+</html>
