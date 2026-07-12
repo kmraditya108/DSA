@@ -22,137 +22,75 @@ class LinkeList1{
     constructor(){
         this.head = null;
         this.size = 0;
-
-        this.head = new listNode(1);
-
-        let curr = this.head;
-        for(let i=2; i<10; i++){
-            let n = new listNode(i);
-            curr.next = n;
-        }
-        console.log("curr : ", curr);
-        
-        
+        // this.insertKSeqelntialElementFrom0ToLL();
     }
 
     // just for my helper function
     insertKSeqentialElementFrom0ToLL(k=10){
-        for(let i=1; i<=k; i++){
-            ll1.insertNode(i)
-        }
-    }
-
-    isEmpty(){
-        return this.size===0;
-    }
-
-    accessKthElement(k){
-        let val = this.head;
-
-        if(k<=0) throw new Error("K should be greater than and equal to 1...");
-        if(!val) throw new Error("Empty LinkedList...");
-        if(this.size < k) throw new Error("Linked list boundary error...");
-
-        let ans = val;
-        let cnt= 1;
-        while(val && cnt<=k){
-            ans = val;
-            val = val.next;
-            cnt++;
-        }
-
-        return ans;
-    }
-
-    insertNode(k){
-        let node = new listNode(k);
-
-        if(!this.head){
-            this.head = node;
-            this.size++;
-        }else{
-            let val = this.head;
-            while(val.next){
-                val = val.next;
+        // if size  > 0 or not undefined or not null
+        // i.e; this.head has some value
+        if(this.size){
+            let curr = this.head;
+            while(curr.next){
+                curr = curr.next;
             }
-            // console.log("val: ", val);
-            
-            val.next = node;
+
+            for(let i=1; i<=k; i++){
+                let n = new listNode(i);
+                curr.next = n;
+                curr = curr.next;
+                this.size++;
+            }
+        }else{
+            let n = new listNode(1);
+            this.head= n;
             this.size++;
+
+            let curr = this.head;
+            for(let i=2; i<=k; i++){
+                let n = new listNode(i);
+                curr.next = n;
+                curr = curr.next;
+                this.size++;
+            }
         }
         return this.head;
     }
 
-    countLLSize(){
-        let val = this.head;
+    isEmpty(){
+        return this.size === 0;
+    }
 
-        if(!val) throw new Error("Empty Linked list...");
+    countSizeOfLL(){
+        if(!this.size) return 0;
 
-        
-        let cnt = 0;
-        while (val) {
+        let curr = this.head;
+        let cnt = 1;
+        while(curr.next){
             cnt++;
-            val = val.next;
+            curr = curr.next;
         }
-
         return cnt;
-        
     }
 
-    insertAtPositionK(val, k){
-        let ele = this.accessKthElement(k-1);
-        let node = new listNode(val)
-        if(ele){
-            
-            let temp = ele.next;
-            ele.next = node;
-            node.next = temp;
-            // console.log("new ele", this.head);
-            // console.log("temp", temp);
+    accessKthPosition(k){
+        if(!this.size)  throw new Error("Error! LinkedList is empty..")
 
-            return this.head;
+        let curr = this.head;
+        let idx = 0;
+        if(curr.element === k) return 0;
+        
+        while(curr.next){
+            curr = curr.next;
+            idx++;
+            if(curr.element === k) {
+                return idx;
+            }
         }
-
-        return false;
+        return -1;
     }
 
-    insertNodeAtKthPosition(val, k){
-        let ll = this.head;
-        if(!ll) throw new Error("Error! Linked list is empty.....");
-
-        let node = new listNode(val);
-        let x = this.head;
-
-        let i = 1;
-        while(i<=k){
-            x = x.next;
-            i++;
-        }
-
-        console.log("x: ",x);
-        console.log("node : ",node);
-        
-        
-
-        /**
-         * val = 10,
-         * k = 2,
-         * LL = 1-->2-->3
-         * x = 1;
-         * i=1
-         * 
-         * in loop:
-         * - i<k | x={2, next:3},i=2
-         * - 
-         */
-        // node.next = x.next
-
-        // let temp = x;
-        // x.next = node;
-        // node.next = temp.next;
-
-
-    }
+    
 
 }
 
