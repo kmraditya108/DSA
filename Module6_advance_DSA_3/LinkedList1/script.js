@@ -314,8 +314,6 @@ class LinkeList1{
 
         if(!ele2) return `${val} is pelindrom`;
         return `${val} is not a pelindrom`;
-        
-
     }
 }
 
