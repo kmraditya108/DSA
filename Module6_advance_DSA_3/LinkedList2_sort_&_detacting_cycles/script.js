@@ -1,6 +1,7 @@
 const QuestionsLists = [
     "Given a LL find the middle element",
-    "Given 2 sorted LinkedList(Or create it from an Array), merge both LinkedList and rearrange in sorted manner."
+    "Given 2 sorted LinkedList(Or create it from an Array), merge both LinkedList and rearrange in sorted manner.",
+    "Sort a given LL."
 ];
 
 listObject('class_topic', QuestionsLists);
@@ -163,8 +164,78 @@ class LinkedListII{
         return{sort1: sortLL1(), sort2: sortLL2()};
     }
 
+    sortLL1(arr=[3,7,0,5,2,9]){
+        let lnkdLst = this.llFromArray(arr);
+        // console.log("lnkdLst : ", lnkdLst);
 
+        let curr = lnkdLst;
+        let len = 0
+        while(curr){
+            curr = curr.next;
+            len++;
+        }
 
+        const getMiddleUsingSlowFastPointer=(ll)=>{
+            if(!ll) return ll;
+            let slow = ll;
+            let fast = ll;
+
+            while(fast.next && fast.next.next){
+                slow = slow.next
+                fast = fast.next.next;
+            }
+            return slow;//.element
+        }
+        // console.log("Find middle using function : ", getMiddleUsingSlowFastPointer(lnkdLst));
+
+        const mergeTwoLL = (linkedList1, linkedList2) => {
+            let l1 = linkedList1;
+            let l2 = linkedList2;
+
+            let l3 = new Node(-1);
+            let tail = l3
+
+            while(l1 && l2){
+                if(l1.element <= l2.element){
+                    tail.next = l1;
+                    l1 = l1.next;
+                    // console.log("l3 if : ", tail);
+                }else{
+                    tail.next = l2;
+                    l2 = l2.next;
+                    // console.log("l3 else : ", tail);
+                }
+                tail = tail.next;
+            }
+            // console.log("tail early : ", tail);
+            
+            if(!l1){
+                tail.next = l2;
+            }else{
+                tail.next = l1;
+            }
+            console.log("l3 inside : ", tail);
+            l3 = l3.next;
+            
+            return l3;
+        }
+        
+        const mergeLLUsingRecurrsion = (ll) => {
+            if(!ll || !ll.next) return ll;
+
+            let mid = getMiddleUsingSlowFastPointer(ll);
+            let leftHalf = ll;
+            let rightHalf = mid.next;
+            mid.next = null;
+            
+            let sortedLeft = mergeLLUsingRecurrsion(leftHalf);
+            let sortedRight = mergeLLUsingRecurrsion(rightHalf);
+
+            return mergeTwoLL(sortedLeft, sortedRight);
+        }
+
+        return mergeLLUsingRecurrsion(lnkdLst);
+    }
 }
 
 const ll2 = new LinkedListII();
