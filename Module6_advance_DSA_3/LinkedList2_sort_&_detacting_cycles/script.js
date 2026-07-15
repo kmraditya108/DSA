@@ -1,7 +1,9 @@
 const QuestionsLists = [
-    "Given a LL find the middle element",
+    "Given a LinkedList find the middle element",
     "Given 2 sorted LinkedList(Or create it from an Array), merge both LinkedList and rearrange in sorted manner.",
-    "Sort a given LL."
+    "Sort a given LinkedList.",
+    "Given a LinkedList of distinct element, check whether it contains cycle or not.",
+    "Given a LinkedList of istinct element, and in the given LinkedList a cycle occur, Find the start point of the cycle"
 ];
 
 listObject('class_topic', QuestionsLists);
@@ -236,6 +238,120 @@ class LinkedListII{
 
         return mergeLLUsingRecurrsion(lnkdLst);
     }
+
+
+    // I have created a dummy LinkedList that contains cycle
+    createCycledLL() {
+        const approach1 = () =>{
+            // const node1 = new Node(10);
+            // const node2 = new Node(20);
+            // const node3 = new Node(30);
+            // const node4 = new Node(40);
+            // const node5 = new Node(50);
+            // const node6 = new Node(60);
+            // const node7 = new Node(70);
+            // const node8 = new Node(80);
+            // const node9 = new Node(90);
+            // const node10 = new Node(100);
+            // const node11 = new Node(110);
+            // const node12 = new Node(120);
+
+            // node1.next = node2
+            // node2.next = node3
+            // node3.next = node4
+            // node4.next = node5
+            // node5.next = node6
+            // node6.next = node7
+            // node7.next = node8
+            // node8.next = node9
+            // node9.next = node10
+            // node10.next = node11
+            // node11.next = node12
+            // node12.next = node7;
+            // console.log("node1 : ", node1);
+            // return node1;
+        }
+
+        const approach2 = () => {
+            let n1 = new Node(10);
+            let dummy = n1;
+            let cycle = null;
+            for(let i=2; i<=10; i++){
+                dummy.next = new Node(i*10);
+                dummy = dummy.next;
+                if(i==6) cycle = dummy;
+            }
+
+            dummy.next = cycle;
+            // console.log("n1 : ", n1);
+            return n1;
+        }
+        return approach2();
+    }
+
+    /**
+     * Check if given LinkedList(distinct element) has cycle
+     */
+    isCycleExist(){
+        const head = this.createCycledLL();
+        console.log("head : ", head);
+
+        let slow = head;
+        let fast = head;
+
+        while(fast.next && fast.next.next){
+            slow = slow.next;
+            fast = fast.next.next;
+
+            if(slow.element === fast.element) return {isCycle:true, element: slow};
+        }
+
+        return false;
+        
+    }
+
+    /**
+     * Que: Find start point of the cycle
+     * 
+     * Note: It's major to know the dist. between the fast and slow meets 1st time to the actual 
+     *      cycle start point  = the distance between LinkedList start point to cycle start point
+     * 
+     * Eg: if cycle start at point 'x' and lets suppose fast and slow meets at 'y', 1st time and 
+     *      let suppose:
+     *          the distance b/w LL start to cycle  = D
+     *          The distance b/w D to 'y' = P
+     *          And total cycle distance = C
+     *      
+     *      As, [2*Slow pointer = fast pointer]
+     *      Hance, 2(D+P) = D+P+n.C -------------> here n is the total round done by Fast pointer
+     *      After solving this: 
+     *          D = n.C - P [here (n.C - P) is nothing but the distance b/w 'P' to cycle start point]
+     * 
+     *      Hance D is the same distance as after point 'P' to cycle start.
+     *      So, if the both pointers runs on the same speed one from LinkedList start and other one from 1st meeting point
+     *          at the place where they meet is the cycle start point.
+     */
+    findStartPointOfCycle(){
+        let head = this.createCycledLL();
+        let slow = head.next;
+        let fast = head.next.next;
+        // As the LinkedList has the cycle for sure, Hance I am just itirating till (fast.element === slow.element)
+        while(fast.element !== slow.element){
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        console.log(slow, " : slow - fast : ", fast);
+        
+
+        fast = head;
+        while(fast.element !== slow.element){
+            slow= slow.next;
+            fast = fast.next;
+        }
+
+        return slow;
+    }
+
 }
 
 const ll2 = new LinkedListII();
