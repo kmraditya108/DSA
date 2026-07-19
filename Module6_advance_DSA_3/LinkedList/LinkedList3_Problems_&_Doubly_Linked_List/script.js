@@ -1,6 +1,7 @@
 const QuestionsLists = [
     "Given 2 LinkedList which interect at some points, find the interaction point. (Without using extra space)",
     "Given a LinkedList, Deep copy the LinkedList which has random pointer. (Without using extra space)",
+    "LRU Cache: Design a LRU(Least Recently Used cache)"
 ];
 
 listObject('class_topic', QuestionsLists);
@@ -228,9 +229,211 @@ class LinkedListIII{
         return {bf_hasing : bf_hasing(), optimal1:optimal1(), optimal2:optimal2()};
     }
 }
-
 const llIII = new LinkedListIII();
-// const randomHead = llIII.createLinkedListWithRandomPointer([10, 20, 30, 40]);
-// llIII.printLinkedListWithRandomPointer(randomHead);
+// ==========================================Doubly Linked list=============================================
+class DoublyLinkedListNode{
+    constructor(val){
+        this.element = val;
+        this.next = null;
+        this.previous = null;
+    }
+}
 
+class DoublyLinkedList{
+    constructor(){
+        this.head = null;
+        this.tail = null;
+        this.size = 0;
+    }
+
+    createADoublyLinkedListFromArray(arr=[10, 20, 30, 40]){
+        this.head = new DoublyLinkedListNode(arr[0]);
+        this.tail = this.head;
+        
+        let c = this.head;
+        // c.previous = null;
+        this.size += 1;
+
+        for(let i=1; i<arr.length; i++){
+            let x = new DoublyLinkedListNode(arr[i]);
+            this.tail = x;
+            x.previous = c;
+
+            c.next = x;
+            c = c.next;
+            this.size++;
+        }
+        // console.log("Doubly linkedList : ", this.head);
+        return this.head;
+    }
+
+    printDoubleLinkedList(head){
+        let c = head;
+        let llNode = c.element;
+        while(c.next){
+            // console.log(' --> ', c.element);
+            llNode += ' ---> '+c.next.element;
+            c = c.next;
+        }
+        console.log(llNode);
+    }
+
+    LRUDesign(){
+        let map = new Map();
+
+        const LRU_init = () => {
+            if(this.size>0) return;
+
+            this.head = new DoublyLinkedListNode(-1)
+            this.tail = new DoublyLinkedListNode(-1);
+
+            this.head.next = this.tail;
+            this.tail.previous = this.head;
+            console.log("lruInit : ", this.head);
+            
+            return this.head;
+        }
+
+        // Move pointer
+        const moveCacheNode = (getCacheNode) => {
+            let x = getCacheNode;
+            
+            // adjust previous neighbour's, next and previous pointers
+            x.next.previous = x.previous;
+            x.previous.next = x.next;
+
+            // now place/move x to right near tail
+            x.next = this.tail;
+            x.previous = this.tail.previous;
+
+            // Now break the link of previous tail and it's left neighbour
+            // And adjust 'x'
+            this.tail.previous = x;
+            x.previous.next = x;
+
+            this.printDoubleLinkedList(this.head);
+        }
+
+        // Add new
+        const addNewCacheNode = (cache_node) => {
+            // Insert new at last(tail)
+            cache_node.next = this.tail;
+            cache_node.previous = this.tail.previous;
+
+            this.tail.previous = cache_node;
+            cache_node.previous.next = cache_node;
+        }
+
+        // insert
+        const insert = (val) => {
+            
+            // if size = 0, call LRU_init fun()
+            LRU_init();
+
+            // if size > 0
+            // 1st check in hashMap 
+            //      --> if exist: then Move cache node to right near tail
+            //      --> If not : then 
+            //          --> Check size:
+            //              --> if size >= 5 : 
+            //                  --> remove the 1st cache node and insert new
+            //              --> else part:[if size < 5] : just insert
+
+            if(map.has(val)){
+                const getCacheNode = map.get(val);
+                
+                // Move this cache node to right side near tail;
+                moveCacheNode(getCacheNode);
+            }else{ //----------------------------> If new cache node arrived
+                let n = new DoublyLinkedListNode(val);
+
+                if(this.size>=5){ //-----------------------> if size >= 5: 
+                    let x = this.head.next.next;
+
+                    // Delete oldest chache node(1st positioned node)
+                    // now shift head to the next position
+                    // x.next = x.next.next;
+                    // x.previous = this.head;
+                    // this.head = x;
+
+                    this.head.next = x;
+                    x.previous = this.head;
+
+                    map.delete(x);
+
+                    // Now after deleting oldest cache node
+                    // Insert new at last(tail)
+                    addNewCacheNode(n);
+
+                    this.printDoubleLinkedList(this.head);
+                }else{ //----------------------------------> if size < 5: Just insert at end
+                    console.log("if size < 5: Just insert at end");
+                    
+                    addNewCacheNode(n);
+                   
+                    this.size++;
+
+                    this.printDoubleLinkedList(this.head);
+                }
+                map.set(val, n)
+            }
+
+            return this.head;
+        }
+
+        // delete
+
+        // move
+
+        return {insert, LRU_init}
+    }
+}
+const doublyLL = new DoublyLinkedList();
+
+/**
+ * An LRU (Least Recently Used) cache is a storage mechanism that holds a 
+ * limited amount of data. When the cache reaches full capacity, it automatically 
+ * discards the item that hasn't been accessed for the 
+ * longest time to make room for new data.
+ * 
+ * To design it: we can use (HashMap/HashSet)+DoublyLinkedList
+ */
+// class LRU extends DoublyLinkedList{
+//     constructor(size=5){
+//         super();
+//         this.size = size;
+//     }
+
+//     // 
+//     initFn(){
+//         this.head = new DoublyLinkedListNode(-1);
+//         this.tail = new DoublyLinkedListNode(-1);
+//         this.head.next = this.tail;
+//         this.tail.previous = this.head;
+
+//         console.log("LRU DoublyLinkedList : ", this.head);
+//         return this.head;
+//     }
+
+//     /**
+//      * insert val/node just before tail.
+//      * You can assume that we are entering node/val to the tail only
+//      */
+//     insertToCache(val){
+//         let h = this.initFn();
+//         let cache = new DoublyLinkedListNode(val);
+
+//         // check the size;
+
+//         // insert into LinkedList
+//         let temp = this.tail.previous;
+//         cache.next = this.tail;
+//         cache.previous = temp;
+//         this.tail.previous = cache;
+//         // this.head.next = cache;
+//         return {head:this.head, tail: this.tail};
+        
+//     }
+// }
+// const lru = new LRU();
 
