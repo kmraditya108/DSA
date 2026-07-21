@@ -242,14 +242,14 @@ function DoubleCharacterTrouble(str='abbcbbcac'){
 /**
  * Que: Given a calculation in 'In-Fix', convert it into postfix and then solve it.
  * 
- * TC: O()
- * SC: O()
+ * TC: O(n)
+ * SC: O(n)
  */
 function postFixConvertion(cal='532+*'){
     let{push, pop, peek, isEmpty, getSize, getHead, clear} = LinkedListStack;
     clear();
 
-    console.log(`head : ${getHead()}`);
+    // console.log(`head : ${getHead()}`);
 
     const operation = {
         '+': (a, b) => a+b,
@@ -271,7 +271,7 @@ function postFixConvertion(cal='532+*'){
             pop();
 
             const operationVal = operation[v](Number(a),Number(b));
-            console.log(b, " : b -- a : ", a, ' :: operationVal :: ', operationVal);
+            // console.log(b, " : b -- a : ", a, ' :: operationVal :: ', operationVal);
 
             push(operationVal);
             continue;
@@ -280,8 +280,12 @@ function postFixConvertion(cal='532+*'){
         push(v);
     }
     console.log('size: ', getSize());
-    if(getSize() === 1 && !isNaN(peek())) return getHead();
+
+    let ans = undefined;
+    if(getSize() === 1 && !isNaN(peek())) {
+        // return getHead()
+        ans = getHead().element;
+    };
 
     return false;
-    
 }
