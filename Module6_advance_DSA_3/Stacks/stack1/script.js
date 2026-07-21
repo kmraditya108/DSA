@@ -2,7 +2,7 @@ const QuestionsLists = [
     "Implement stack using array",
     "Implement stack using LinkedList",
     "Valid Parentheses : Check if a given sequence of Parentheses is valid or not. |--- OR---| Given a string containing (), {}, [], determine if the input string is valid.",
-
+    "Double Character Trouble: Given a string remove equal pair of consequtive elements untill it's possible"
 ];
 
 listObject('class_topic', QuestionsLists);
@@ -15,7 +15,6 @@ listObject('class_topic', QuestionsLists);
  * d) size: get size of stack
  * e) isEmpty: check stack is empty or not[return boolean]
  */
-
 
 class StackFromArray {
     constructor() {
@@ -56,7 +55,6 @@ class StackFromArray {
 }
 
 const stack_from_arr = new StackFromArray();
-
 
 function fillArrayStack(arr = [10, 12, 14, 15, 20, 34]) {
     for (let i of arr)
@@ -141,7 +139,14 @@ function fillLinkedListStack(arr = [10, 12, 14, 15, 20]) {
 
 // ==================================== Other Stack related question =====================================
 
-
+/**
+ * Que: Valid Parentheses : Check if a given sequence of Parentheses is valid or not. 
+ * |--- OR---| 
+ * Given a string containing (), {}, [], determine if the input string is valid.
+ * 
+ * TC: O(N)
+ * SC: O(N) ---> Due to stack
+ */
 function isValidParenthesis(str = '({})[]') {
 
     const { push, peek, pop, isEmpty, getSize, getHead } = LinkedListStack;// new StackFromLinkedList(10); // -----------> Destructuring method of ES6
@@ -190,4 +195,45 @@ function isValidParenthesis(str = '({})[]') {
     }
 
     return { approach1: approach1(), approach2: approach2() };
+}
+
+/**
+ * Que: Double Character Trouble: Given a string remove equal pair of consequtive elements untill it's possible
+ * 
+ * TC: O(N)
+ * SC: O(N) ---> Due to stack
+ */
+function DoubleCharacterTrouble(str='abbcbbcac'){
+    const{push, peek, pop, isEmpty, clear, getHead, getSize} = LinkedListStack;
+    
+    for(let v of str){
+        let size = getSize();
+        // console.log(v, " : v - head : "+getHead(), ' : size : ', size);
+        
+        if(size === 0){ // ------> When Stack size=0, just push
+            push(v);
+            // console.log(`Stack size is 0 hence pushing the value ${v}, Now Stack become ${getHead()}`);
+            
+            continue;
+        }
+
+        let prevStackVal = peek();
+        if(prevStackVal === v) {
+            // console.log(`removing stack head:${prevStackVal} as it's matched with this coming val:${v}`);
+            pop();
+        }else{
+            push(v);
+        }
+    }
+
+    let h1 = getHead();
+    // console.log(`final Head : ${h1} ----- `+h1);
+    
+    let ans = '';
+    while(h1){
+        ans = h1.element+ans;
+        h1 = h1.next;
+    }
+
+    return ans;
 }
