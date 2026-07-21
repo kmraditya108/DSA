@@ -2,7 +2,8 @@ const QuestionsLists = [
     "Implement stack using array",
     "Implement stack using LinkedList",
     "Valid Parentheses : Check if a given sequence of Parentheses is valid or not. |--- OR---| Given a string containing (), {}, [], determine if the input string is valid.",
-    "Double Character Trouble: Given a string remove equal pair of consequtive elements untill it's possible"
+    "Double Character Trouble: Given a string remove equal pair of consequtive elements untill it's possible",
+    "Given a calculation in 'In-Fix', convert it into postfix and then solve it."
 ];
 
 listObject('class_topic', QuestionsLists);
@@ -236,4 +237,51 @@ function DoubleCharacterTrouble(str='abbcbbcac'){
     }
 
     return ans;
+}
+
+/**
+ * Que: Given a calculation in 'In-Fix', convert it into postfix and then solve it.
+ * 
+ * TC: O()
+ * SC: O()
+ */
+function postFixConvertion(cal='532+*'){
+    let{push, pop, peek, isEmpty, getSize, getHead, clear} = LinkedListStack;
+    clear();
+
+    console.log(`head : ${getHead()}`);
+
+    const operation = {
+        '+': (a, b) => a+b,
+        '-': (a, b) => a-b,
+        '*': (a, b) => a*b,
+        '/': (a, b) => a/b,
+        '%': (a, b) => a%b
+    }
+
+    for(let v of cal){
+        if(isNaN(v)){
+            if(!operation[v]) throw new Error("Error!! Operation not supported.");
+
+            let b = peek();
+            pop();
+            if(!getSize()) throw new Error("Calculation operator Error!! Please check the argument there's an extra operator are available.");
+            
+            let a = peek();// getHead().next;
+            pop();
+
+            const operationVal = operation[v](Number(a),Number(b));
+            console.log(b, " : b -- a : ", a, ' :: operationVal :: ', operationVal);
+
+            push(operationVal);
+            continue;
+        }
+
+        push(v);
+    }
+    console.log('size: ', getSize());
+    if(getSize() === 1 && !isNaN(peek())) return getHead();
+
+    return false;
+    
 }
