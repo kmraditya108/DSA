@@ -23,7 +23,7 @@ class StackFromArray{
     constructor(){
         this.head = null;
         this.stackArr = [];
-        this.size = this.stackArr.length;
+        this.size = 0;
     }
 
     push(val){
@@ -42,9 +42,30 @@ class StackFromArray{
         this.size--;
     }
 
-    peek(){}
+    peek(){
+        if(!this.size) throw new Error("Null pointer exception!!\nNo stacks available.")
+
+        return this.stackArr[this.size-1];
+    }
+
+    isEmpty(){
+        return this.size===0;
+    }
+
+    clear(){
+        this.stackArr.length = 0;
+        this.size = 0;
+        
+        return this.stackArr;
+    }
 }
 
 const stack_from_arr = new StackFromArray();
 
 
+function fillStack(arr=[10, 12,14,15,20,34]){
+    for(let i of arr)
+        stack_from_arr.push(i);
+
+    return stack_from_arr;
+}
