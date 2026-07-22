@@ -49,6 +49,7 @@ class Stack2{
 
     clear=()=>{
         this.head = null;
+        this.size = 0;
         return this.head;
     }
 
@@ -78,12 +79,12 @@ function nextSmallerElement(arr=[4,5,2,10,3,2]){
 
             let curr = arr[i];
             for(let j=i-1; j>=0; j--){
-                if(arr[j]<curr){
-                    ans[i] = arr[j];
+                if(curr>arr[j]){
+                    ans[i] = arr[j] || 0;
                     break;
                 }
             }
-            if(!ans[i]) ans[i]='none';
+            if(!ans[i] && (ans[i]!==0)) ans[i]='none';
         }
         return ans;
     }
@@ -110,7 +111,7 @@ function nextSmallerElement(arr=[4,5,2,10,3,2]){
                         h = h.next;
                         pop();
 
-                        if(!h) ans[i] = 'none';
+                        if(!h && h!==0) ans[i] = 'none';
                     }else{
                         ans[i] = h.element;
                         
@@ -123,5 +124,31 @@ function nextSmallerElement(arr=[4,5,2,10,3,2]){
         }
         return {ans: ans, head: getHead()};
     }
-    return {bf: bf(), opt:opt()}
+
+    const opt1 = () => {
+        clear();
+
+        let ans = new Array(n);
+        ans[0] = 'none';
+        push(arr[0]);
+
+        for(let i=1; i<n; i++){
+            let hdEle = peek();
+            while(!isEmpty() && (peek()>=arr[i])){
+                pop();
+                console.log("isEmpty() ---- getHead() >>> ", isEmpty(), getHead());
+            }
+
+            if(isEmpty()){
+                ans[i] = 'none';
+            }else{
+                ans[i] = peek();
+            }
+            push(arr[i]);
+        }
+
+        return {ans, head: getHead()}
+    }
+
+    return {bf: bf(), opt:opt(), opt1:opt1()}
 }
