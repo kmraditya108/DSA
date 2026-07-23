@@ -1,5 +1,7 @@
 const QuestionsLists = [
     "Next Smaller Element: Given an integer array, for every index i, find the nearest smaller element towards it's left.",
+    "Next Smaller Element-Variations: Given an integer array, for every index i, find the nearest smaller element's index towards it's left.",
+    "Next Smaller Element-Variations: Given an integer array, for every index i, find the nearest smaller and equal element's towards it's left.",
 ];
 
 listObject('class_topic', QuestionsLists);
@@ -151,4 +153,29 @@ function nextSmallerElement(arr=[4,5,2,10,3,2]){
     }
 
     return {bf: bf(), opt:opt(), opt1:opt1()}
+}
+
+/**
+ * Next Smaller Element-Variations: Given an integer array, for every index i, find the nearest smaller element's index towards it's left.
+ */
+function leftNextSmallerElementIndex(arr=[4,5,2,10,3,2]){
+    console.log("given arr : ", arr);
+    
+    clear();
+    let n = arr.length;
+    let ans = [];
+    // ans[0] = -1;
+    for(let i=0; i<n; i++){
+        while(!isEmpty() && arr[peek()]>=arr[i]){
+            pop();
+        }
+        if(isEmpty()){
+            ans[i] = -1;
+        }else{
+            ans[i] = peek();
+        }
+        push(i);
+    }
+
+    return {ans, head: getHead()};
 }
