@@ -2,7 +2,8 @@ const QuestionsLists = [
     "Next Smaller Element: Given an integer array, for every index i, find the nearest smaller element towards it's left.",
     "Next Smaller Element-Variations: Given an integer array, for every index i, find the nearest smaller element's index towards it's left.",
     "Next Smaller Element-Variations: Given an integer array, for every index i, find the nearest smaller and equal element's towards it's left.",
-    "Next Smaller Element-Variations: Given an integer array, for every index i, find the nearest greater element's towards it's left."
+    "Next Smaller Element-Variations: Given an integer array, for every index i, find the nearest greater element's towards it's left.",
+    "Next Smaller Element-Variations: Given an integer array, for every index i, find the nearest greater and equals element's towards it's left.",
 ];
 
 listObject('class_topic', QuestionsLists);
@@ -230,5 +231,34 @@ function leftNextGreaterElements(arr=[4,5,2,10,3,2]){
         push(arr[i]);
     }
 
+    return {ans, head: getHead()};
+}
+
+/**
+ * Que: Next Smaller Element-Variations: Given an integer array, for every index i, find the nearest greater and equals element's towards it's left.
+ * TC: O(N) ---> Basically O(2N) : 2N is due to while loop as it will execute maximum one time for a particule loop
+ *      EG: if array is in Descending order, then each for loop iteration, one more pop() will execute
+ * 
+ * SC: O(N) ---> ans array
+ */
+function leftNextGreaterAndEqualElements(arr=[4,5,2,10,3,2]){
+    clear();
+    console.log("given arr : ", arr);
+    
+    let n = arr.length;
+    let ans = new Array(n);
+    for(let i=0; i<n; i++){
+        while(!isEmpty() && peek()<arr[i]){
+            pop();
+        }
+
+        if(isEmpty()){
+            ans[i] = 'none';
+        }else{
+            ans[i] = peek();
+        }
+
+        push(arr[i]);
+    }
     return {ans, head: getHead()};
 }
