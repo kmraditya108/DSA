@@ -4,6 +4,9 @@ const QuestionsLists = [
     "Next Smaller Element-Variations: Given an integer array, for every index i, find the nearest smaller and equal element's towards it's left.",
     "Next Smaller Element-Variations: Given an integer array, for every index i, find the nearest greater element's towards it's left.",
     "Next Smaller Element-Variations: Given an integer array, for every index i, find the nearest greater and equals element's towards it's left.",
+    "Next Smaller Element-Variations: Given an integer array, for every index i, find the nearest greater and equals element's towards it's Right.",
+    "Largest Rectangle in Histogram: Find the largest Rectange formed by continous historgram bars.",
+    ""
 ];
 
 listObject('class_topic', QuestionsLists);
@@ -261,4 +264,90 @@ function leftNextGreaterAndEqualElements(arr=[4,5,2,10,3,2]){
         push(arr[i]);
     }
     return {ans, head: getHead()};
+}
+
+/**
+ * Que: Next Smaller Element-Variations: Given an integer array, for every index i, find the nearest greater element's towards it's Right.
+ */
+function RightNextGreaterAndEqualElements(arr=[4,5,2,10,3,2]){
+    console.log("arr : ", arr);
+    
+    clear();
+    let n = arr.length;
+    let ans = new Array(n);
+
+    for(let i=n-1; i>=0; i--){
+        while(!isEmpty() && peek()<=arr[i]){
+            pop();
+        }
+
+        if(isEmpty()){
+            ans[i] = 'none'
+        }else{
+            ans[i] = peek();
+        }
+
+        push(arr[i]);
+    }
+    return {ans, head: getHead()};
+}
+
+/**
+ * Que: Largest Rectangle in Histogram: Find the largest Rectange formed by continous historgram bars.
+ */
+function LargestRanctangle(arr=[2,1,4,7,5,2,1,3,4,5,6,4,3,2,3,1,5,6,4,2]){
+    clear();
+    let n = arr.length;
+    console.log("array : ", arr);
+
+    // Find the nearest smaller element towards the arr[i].
+    const getLS = () => {
+        let ls = new Array(n)
+        for(let i=0; i<n; i++){
+            while(!isEmpty() && arr[peek()]>=arr[i]){
+                pop();
+            }
+            if(isEmpty()){
+                ls[i] = -1;
+            }else{
+                ls[i] = peek();
+            }
+            push(i);
+        }
+        console.log("ls: ", ls);
+        
+        return ls;
+    }
+    
+
+    
+    const getRS = () => {
+        let rs = new Array(n);
+        clear();
+        for(let i=n-1; i>=0; i--){
+            while(!isEmpty() && arr[peek()]>=arr[i]){
+                pop();
+            }
+            if(isEmpty()){
+                rs[i] = n;// -----> Here we are keeping n(array length), as it's indicating last to the array, so we can't keep -1, it will impact the further calculation
+            }else{
+                rs[i] = peek();
+            }
+            push(i);
+        }
+        console.log("rs: ", rs);
+        
+        return rs;
+    }
+
+    const ls = getLS();
+    const rs = getRS();
+    clear();
+    let ans = Number.MIN_SAFE_INTEGER;
+    for(let i=0; i<n; i++){
+        ans = Math.max(ans, arr[i]*(rs[i]-ls[i]-1));
+    }
+
+    return ans;
+    
 }
