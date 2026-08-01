@@ -6,207 +6,146 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Queue DSA Visualiser</title>
     <!-- <style></style> -->
-    <link rel="stylesheet" href="styles.css"/>
+    <link rel="stylesheet" href="styles.css" />
 </head>
 
 <body onload="init()">
     <Header>
         <h1>
-            <center>Queues: Implementation & Problems</center>
+            <center>Queues: Details, Implementation & Problems</center>
         </h1>
     </Header>
     <main>
-        <p>A Queue is a linear data structure that operates on the First-In, First-Out (FIFO) principle, meaning the
-            first element added to the queue is the first one to be removed. It simulates real-life lines, like people
-            waiting at a ticket counter</p>
-        <h3>Core Concept</h3>
-        <ul>
-            <li>
-                <b>Front/Head : </b>The end where elements are removed (dequeued).
-            </li>
-            <li>
-                <b>Rear/Tail : </b>The end where elements are added (enqueued).
-            </li>
-        </ul>
+        <div class="accordion">
+            <details>
+                <summary>Section 1: Introduction</summary>
+                <p>A Queue is a linear data structure that operates on the First-In, First-Out (FIFO) principle, meaning
+                    the
+                    first element added to the queue is the first one to be removed. It simulates real-life lines, like
+                    people
+                    waiting at a ticket counter</p>
+                <h3>Core Concept</h3>
+                <ul>
+                    <li>
+                        <b>Front/Head : </b>The end where elements are removed (dequeued).
+                    </li>
+                    <li>
+                        <b>Rear/Tail : </b>The end where elements are added (enqueued).
+                    </li>
+                </ul>
 
-        <h3>Standard Operations</h3>
-        <p>All standard queue operations run in O(1) time complexity:</p>
-        <ul>
-            <li>
-                <b>Enqueue : </b>Inserts an element at the rear end of the queue.
-            </li>
-            <li>
-                <b>Dequeue : </b>Removes and returns the element from the front end of the queue.
-            </li>
-            <li>
-                <b>Peek/Front : </b>Returns the front element without removing it.
-            </li>
-            <li>
-                <b>IsEmpty : </b>Checks if the queue contains no elements.
-            </li>
-            <li>
-                <b>IsFull : </b>Checks if the queue has reached its maximum capacity (relevant for array
-                implementations).
-            </li>
+                <h3>Standard Operations</h3>
+                <p>All standard queue operations run in O(1) time complexity:</p>
+                <ul>
+                    <li>
+                        <b>Enqueue : </b>Inserts an element at the rear end of the queue.
+                    </li>
+                    <li>
+                        <b>Dequeue : </b>Removes and returns the element from the front end of the queue.
+                    </li>
+                    <li>
+                        <b>Peek/Front : </b>Returns the front element without removing it.
+                    </li>
+                    <li>
+                        <b>IsEmpty : </b>Checks if the queue contains no elements.
+                    </li>
+                    <li>
+                        <b>Size : </b>Get size of the Queue.
+                    </li>
 
-        </ul>
+                </ul>
+            </details>
 
-        <h3>Summary</h3>
+            <details>
+                <summary>Section 2: Queue Summary</summary>
+                <h3>Summary</h3>
 
-        <p>A queue is a FIFO data structure with operations like enqueue, dequeue, peek, isEmpty, and isFull. Types
-            include
-            simple, circular, priority, and deque queues.</p>
+                <p>A queue is a FIFO data structure with operations like enqueue, dequeue, peek, isEmpty, and isFull.
+                    Types
+                    include
+                    simple, circular, priority, and deque queues.</p>
+            </details>
 
-        <h2>Queue Visualiser</h2>
-        <section class="queue-visualizer">
-            <div class="pipes-label main-section">
-                <span>Front(Out)</span>
-                <span>Rear(In)</span>
-            </div>
+            <details open>
+                <summary>Section 3: Queue Playground</summary>
+                <h2>Queue Visualiser</h2>
+                <section class="queue-visualizer">
+                    <div class="pipes-label main-section">
+                        <span>Front(Out)</span>
+                        <span>Rear(In)</span>
+                    </div>
 
-            <path d="M 97.8 163 L 143.44 163" stroke="red" stroke-width="2" marker-end="url(#arrow)"></path>
-            <div class="main-section queue-container" id="queueView"></div>
+                    <div class="main-section queue-container" id="queueView"></div>
 
-            <!-- <div class="custom-divider"/> -->
-             <div class="custom-divider"></div>
+                    <!-- <div class="custom-divider"/> -->
+                    <div class="custom-divider"></div>
 
-            <section class="pipes-addition-labels visual-sections main-section" id="last_label_container">
-                <div>
-                    <span>Size/Max</span>
-                    <span id="size_max" onload="bottomDisplayData()"></span>
-                </div>
-                <div>
-                    <span>Front/Rear</span>
-                    <span id="front_rear"></span>
-                </div>
-                <div>
-                    <span>Last Action</span>
-                    <span id="last_Action"></span>
-                </div>
-            </section>
+                    <section class="pipes-addition-labels visual-sections main-section" id="last_label_container">
+                        <div>
+                            <span>Size/Max</span>
+                            <span id="size_max" onload="bottomDisplayData()"></span>
+                        </div>
+                        <div>
+                            <span>Front/Rear</span>
+                            <span id="front_rear"></span>
+                        </div>
+                        <div>
+                            <span>Last Action</span>
+                            <span id="last_Action"></span>
+                        </div>
+                    </section>
+                    <p class="error-msg"></p>
 
-            <div class="custom-divider"></div>
+                    <div class="custom-divider"></div>
 
-            <section class="visual-sections main-section action-container">
-                <div>
-                    <label class="labels">Next value </label>
-                    <input class="input-field" type="text" id="elementInput" placeholder="Enter value" autofocus>
-                </div>
-                
-                <div class="additional-action-container">
-                    <button class="btn primary-btn" onclick="enqueue()">Enqueue</button>
-                    <button class="btn" onclick="dequeue()">Dequeue</button>
-                    <!-- <span class="optional_span">Optional: </span> -->
-                    <button class="additional_fn btn" onclick="peek()">Peek</button>
-                    <button class="additional_fn btn" onclick="isFull()">isFull</button>
-                    <button class="additional_fn btn" onclick="isEmpty()">isEmpty</button>
-                </div>
+                    <section class="visual-sections main-section action-container">
+                        <div>
+                            <label class="labels">Next value </label>
+                            <input class="input-field" type="text" id="elementInput" placeholder="Enter value"
+                                autofocus>
+                        </div>
 
-                
-            </section>
-        </section>
+                        <div class="additional-action-container">
+                            <button class="btn primary-btn" onclick="enqueue()">Enqueue</button>
+                            <button class="btn" onclick="dequeue()">Dequeue</button>
+                            <!-- <span class="optional_span">Optional: </span> -->
+                            <button class="additional_fn btn" onclick="peek()">Peek</button>
+                            <!-- <button class="additional_fn btn" onclick="getSize()">size</button>
+                            <button class="additional_fn btn" onclick="isEmpty()">isEmpty</button> -->
+                        </div>
 
+                    </section>
+                </section>
+            </details>
+        </div>
 
-        <!-- <h2>Topic cover belows question/content</h2>
-        <ul id="class_topic" /> -->
+        <details open>
+            <summary>Section 4: Queue Implementation & Problems</summary>
+            <h2>Topic cover belows question/content</h2>
+            <ul id="class_topic" />
+        </details>
     </main>
 
-    <script defer>
-        let size = 5;
-        const queue = [];
-        let lastAction = '';
-
-        function updateLength() {
-            return queue.length;
-        }
-        function updateView(animateLastItem = false) {
-            const container = document.getElementById('queueView');
-            container.innerHTML = queue.map((item, index) => {
-                const shouldAnimate = animateLastItem && index === queue.length - 1;
-                return `<div class="queue-item ${shouldAnimate ? 'queue-item-enter' : ''}">
-                    ${index===(queue.length-1) ? "<p class='rear-label'><span>&#9660;</span>rear</p>" : '<p class="rear-label"></p>'}
-                    <p class="queue-item-val">${item}</p>
-                ${index===0 ? '<p class="front-label"><span>&#9650;</span>front</p>' : '<p class="front-label"></p>'}
-                    </div>`;
-            }).join('');
-        }
-        async function enqueue() {
-            if(queue.length === size) {
-                showError("Queue has already reached to it's max limit")
-                return;
-            };
-
-            lastAction = 'Enqueue'
-            const val = document.getElementById('elementInput').value.trim();
-            if (val) {
-                queue.push(val);
-                updateView(true);
-            }
-            await updateLength();
-            bottomDisplayData();
-
-            document.getElementById('elementInput').value = '';
-            document.getElementById('elementInput').autofocus = true;
-        }
-
-        async function dequeue() {
-            if (queue.length) {
-                queue.shift();
-                updateView(false);
-            }
-            lastAction = 'Dequeue'
-            await updateLength();
-            bottomDisplayData();
-        }
-
-        function showError(msg){
-            const lastContainer = document.getElementById('last_label_container');
-            lastContainer.innerHTML = `<p class="error_msg">${msg}<p>`
-        }
-
-        function peek() {
-            if (!queue.length) {
-                showError('No data found in queue, 1st enter data then select')
-            }
-
-            lastAction = 'Peek';
-
-            bottomDisplayData();
-
-            const peekElement = document.getElementsByClassName('queue-item');
-            // const len = peekElement.length;
-            if (peekElement.length > 0) {
-
-                Object.assign(peekElement[0].style, {
-                    border: '2px solid red'
-                })
-                // Change background color
-                // peekElement[0].style.backgroundColor = 'yellow';
-
-                // // Highlight border
-                // peekElement[0].style.border = '2px solid red';
-            }
-            console.log("peekElement: ", peekElement);
-        }
-
-        function bottomDisplayData() {
-            const sizeValContainer = document.getElementById('size_max');
-            sizeValContainer.innerHTML = `<p style='color:red; margin:0px; padding:0px; z-index:9999;'>${updateLength()}/${size}</p>`
-
-            const frontRear = document.getElementById('front_rear');
-            let len = queue.length-1;
-            frontRear.innerHTML = len>=0 ? `<p>${queue[0]} / ${queue[queue.length-1]}</p>` : '';
-
-            const lastActionEle = document.getElementById('last_Action');
-            lastActionEle.innerHTML = `<p>${lastAction}</p>`
-        }
-
-        function init() {
-            setTimeout(() => {
-                bottomDisplayData();
-            }, 1000);
-        }
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            window.scrollTo({
+                top: document.body.scrollHeight,
+                behavior: 'smooth' // Remove or change to 'auto' for instant jump
+            });
+        });
     </script>
+
+    <script>
+        const input = document.getElementById('elementInput');
+        input.addEventListener('keydown', function(event){
+            if(event.key==='Enter'){
+                event.preventDefault();
+                enqueue();
+            }
+        });
+    </script>
+
+    <script src="playground.js" defer></script>
 
     <script src="../../ListsUtils.js"></script>
     <script src="script.js"></script>
