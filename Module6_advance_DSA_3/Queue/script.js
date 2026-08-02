@@ -1,7 +1,8 @@
 const QuestionsLists = [
     "Queue implementation using LinkedList.",
     "Queue implementation using Stack.",
-    "Nth perfect number: Return the Nth number formed by using 1 and 2."
+    "Nth perfect number: Return the Nth number formed by using 1 and 2.",
+    "Sliding window maximum: Given an integer array, find the max element in every window of size k."
 ];
 
 listObject('class_topic', QuestionsLists);
