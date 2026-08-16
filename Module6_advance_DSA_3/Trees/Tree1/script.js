@@ -108,6 +108,7 @@ class Tree1{
                 curr = curr.right;
             }
         }
+        return tree(arr, 0);
     }
 }
 
