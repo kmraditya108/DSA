@@ -1,24 +1,161 @@
-name: AI Code Review Agent
+# name: AI Code Review Agent
+
+# on:
+#   pull_request:
+#     types: [opened, synchronize] # Triggers when PR opens or gets new commits
+
+# jobs:
+#   review:
+#     runs-on: ubuntu-latest
+#     permissions:
+#       contents: read
+#       pull-requests: write # Allows AI to write comments on the PR
+
+#     steps:
+#       - name: Checkout Code
+#         uses: actions/checkout@v4
+
+#       - name: Run AI Code Reviewer
+#         uses: anc95/ChatGPT-Action@v1.4.0
+#         with:
+#           openai_api_key: ${{ secrets.OPENAI_API_KEY }}
+#           github_token: ${{ secrets.GITHUB_TOKEN }}
+#           model: "gpt-4o" # Uses a fast and smart model for JS evaluation
+#           output_lang: "en"
+
+
+name: Class-Based AI DSA Tester
 
 on:
   pull_request:
-    types: [opened, synchronize] # Triggers when PR opens or gets new commits
+    types: [opened, synchronize]
 
 jobs:
-  review:
+  ai-class-execution:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      pull-requests: write # Allows AI to write comments on the PR
+      pull-requests: write
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Run AI Code Reviewer
-        uses: anc95/ChatGPT-Action@v1.4.0
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          openai_api_key: ${{ secrets.OPENAI_API_KEY }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          model: "gpt-4o" # Uses a fast and smart model for JS evaluation
-          output_lang: "en"
+          node-version: '20'
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install AI Dependencies
+        run: pip install openai
+
+      - name: Execute Class Interceptor & Test Generator
+        env:
+          OPENAI_API_KEY: \${{ secrets.OPENAI_API_KEY }}
+          GITHUB_TOKEN: \${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: \${{ github.event.pull_request.number }}
+          REPO: \${{ github.repository }}
+        run: |
+          cat << 'EOF' > class_runner.py
+          import os
+          import json
+          import subprocess
+          import re
+          from openai import OpenAI
+
+          client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
+
+          # 1. Identify changed plain JavaScript files
+          diff_cmd = ["git", "diff", "--name-only", "origin/main...HEAD"]
+          changed_files = subprocess.check_output(diff_cmd).decode("utf-8").split("\n")
+          js_files = [f for f in changed_files if f.strip().endswith(".js")]
+
+          if not js_files:
+              print("No plain JS files updated in this PR.")
+              exit(0)
+
+          target_file = js_files[0].strip()
+          with open(target_file, "r") as f:
+              user_code = f.read()
+
+          # Dynamically locate the class name using a basic Regex pattern
+          class_match = re.search(r'class\s+(\w+)', user_code)
+          if not class_match:
+              print(f"Could not find a valid JavaScript class definition in {target_file}")
+              exit(0)
+          
+          class_name = class_match.group(1)
+
+          # Prepare an export version for our sandboxed runner script
+          sandboxed_code = f"{user_code}\n\nmodule.exports = {{ {class_name} }};"
+          with open("sandbox_source.js", "w") as sf:
+              sf.write(sandboxed_code)
+
+          # 2. Instruct OpenAI to build targeted validation test cases for this specific DSA class
+          prompt = f"""
+          You are a strict, automated software evaluation engine for Data Structures and Algorithms.
+          Analyze the following JavaScript class code and generate a fully executable, standalone testing script.
+          Provide ONLY clean, executable JavaScript code inside standard markdown blocks. No explanations.
+
+          Your test runner script must:
+          1. Import the class: const {{ {class_name} }} = require('./sandbox_source.js');
+          2. Explicitly test the complex functions found in this class, specifically focusing on structural DSA edge cases:
+             - Standard correct inputs (e.g., matching PostOrder and InOrder sequences)
+             - Completely empty or single-element array sequences
+             - Mismatched traversal data array lengths (structural anomalies)
+             - Deeply unbalanced linear tree structures
+          3. Wrap the tests in a clean loop or try/catch mechanism.
+          4. Format output using clear console logs indicating: '🟢 [PASS] Test Name' or '🔴 [FAIL] Test Name - Expected X but got Y'.
+
+          Class implementation to evaluate:
+          {user_code}
+          """
+
+          response = client.chat.completions.create(
+              model="gpt-4o",
+              messages=[{"role": "user", "content": prompt}]
+          )
+          
+          raw_output = response.choices.message.content
+          js_test_code = raw_output.replace("```javascript", "").replace("```", "").strip()
+
+          # 3. Save and run the dynamically constructed test script
+          with open("dynamic_ai_run.test.js", "w") as tf:
+              tf.write(js_test_code)
+
+          try:
+              exec_res = subprocess.run(["node", "dynamic_ai_run.test.js"], capture_output=True, text=True)
+              test_results = exec_res.stdout
+              if exec_res.stderr:
+                  test_results += f"\nRuntime Console Errors:\n{exec_res.stderr}"
+          except Exception as e:
+              test_results = f"The code evaluation environment crashed: {str(e)}"
+
+          # 4. Generate the direct review critique
+          critique_prompt = f"Provide a brief 3-sentence evaluation of the time and space complexity (O notation) for the algorithms implemented inside this code:\n{user_code}"
+          critique_res = client.chat.completions.create(
+              model="gpt-4o",
+              messages=[{"role": "user", "content": critique_prompt}]
+          )
+          complexity_critique = critique_res.choices.message.content
+
+          # 5. Push report back onto the GitHub PR Timeline
+          comment_body = f"### 🤖 AI Class Agent Test Matrix Report for `{target_file}`\n\n#### 📊 Functional Execution Logs\n```text\n{test_results if test_results.strip() else 'No test outputs logged.'}\n```\n\n#### 📈 Complexity Analysis Critique\n{complexity_critique}"
+          
+          payload = json.dumps({ "body": comment_body })
+          pr_url = f"https://github.com{os.environ['REPO']}/issues/{os.environ['PR_NUMBER']}/comments"
+          headers = {
+              "Authorization": f"Bearer {os.environ['GITHUB_TOKEN']}",
+              "Content-Type": "application/json"
+          }
+          
+          import urllib.request
+          req = urllib.request.Request(pr_url, data=payload.encode('utf-8'), headers=headers, method='POST')
+          urllib.request.urlopen(req)
+          EOF
+          python class_runner.py
