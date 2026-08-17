@@ -1,7 +1,9 @@
 const QuestionsLists = [
+    "Create Binary Tree from Array",
     "Tree implementation : Pre-Order",
     "Tree implementation : In-Order",
     "Tree implementation : Post-Order",
+    "inOrder traversal without recursion",
 ];
 
 listObject('class_topic', QuestionsLists);
@@ -82,6 +84,30 @@ class Tree1{
         }
 
         inOrderTraversal(this.treeRoot)
+    }
+
+    /**
+     * Only Stack can remove recursion
+     * So use custom Stack here.
+     */
+    inOrderTraversalWithoutRecursion(arr=[1, 2, 3, 4, 5, null, 6]){
+        this.createTree(arr);
+
+        let stack = [];
+        let curr = this.treeRoot;
+        while(true){
+            if(!curr && !stack.length) break;
+
+            if(curr){
+                stack.push(curr);
+                curr = curr.left;
+            }else{
+                curr = stack[stack.length-1]
+                console.log("val:", curr.root);
+                stack.pop();
+                curr = curr.right;
+            }
+        }
     }
 }
 
